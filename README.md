@@ -41,4 +41,4 @@ Adversarial loss: ![](https://latex.codecogs.com/gif.latex?L_{gan}^{s\rightarrow
 Cycle loss: ![](https://latex.codecogs.com/gif.latex?L_{cycle}^{s\rightarrow&space;t}=E_{x\sim&space;X_{s}}[\mid&space;x-G_{t\rightarrow&space;s}(G_{s\rightarrow&space;t}(x))\mid&space;_{1}]) <br>
 Identity loss: ![](https://latex.codecogs.com/gif.latex?L_{identity}^{s\rightarrow&space;t}=E_{x\sim&space;X_{t}}[\mid&space;x-G_{s\rightarrow&space;t}(x)\mid&space;_{1}]) <br>
 CAM loss: ![](https://latex.codecogs.com/gif.latex?L_{cam}^{s\rightarrow&space;t}=-(E_{x\sim&space;X_{s}}[log(\eta&space;_{s}(x))]&plus;E_{x\sim&space;X_{t}}[log(1-\eta&space;_{s}(x))]))<br>
-![](https://latex.codecogs.com/gif.latex?L_{cam}^{D_{t}}=E_{x\sim&space;X_{t}}[(\eta&space;_{D_{t}}(x))^2]&plus;E_{x\sim&space;X_{s}}[(1-\eta&space;_{D_{t}}(G_{s\rightarrow&space;t}(x))^2])<br>
+![](https://latex.codecogs.com/gif.latex?L_{cam}^{D_{t}}=E_{x\sim&space;X_{t}}[(\eta&space;_{D_{t}}(x))^2]&plus;E_{x\sim&space;X_{s}}[(1-\eta&space;_{D_{t}}(G_{s\rightarrow&space;t}(x))^2]) <br>
