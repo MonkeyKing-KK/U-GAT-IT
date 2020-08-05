@@ -1,4 +1,5 @@
 # U-GAT-IT
+这是一篇对U-GAT-IT论文的个人解读![](https://arxiv.org/pdf/1907.10830.pdf)
 
 ## INTRODUCTION
 图像到图像转换旨在学习一个在两个不同域里映射图像的函数, 其应用包括image inpainting(图像修复), super resolution(超分辨率), colorization(图像着色)和style transfer(风格迁移)<br>
