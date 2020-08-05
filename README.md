@@ -16,10 +16,10 @@
 ![](https://github.com/MonkeyKing-KK/U-GAT-IT/blob/master/Images/Generator.png)
 首先图像经过一个下采样模块,然后经过一个残差块,得到编码后的特征图，编码后的特征图分两路,一路是通过一个辅助分类器,得到有每个特征图的权重信息,然后与另外一路编码后的特征图相乘,得到有注意力的特征图.注意力特征图依然是分两路,一路经过一个1x1卷积和激活函数层得到黄色的a1...an特征图,然后黄色特征图通过全连接层得到解码器中 Adaptive Layer-Instance Normalization层的gamma和beta,另外一路作为解码器的输入,经过一个自适应的残差块（含有Adaptive Layer-Instance Normalization）以及上采样模块得到生成结果.<br>
 这里讲一下AdaLIN的具体公式:<br>
-$$![](https://latex.codecogs.com/gif.latex?\hat{a_{I}}=\frac{a-\mu_{I}}{\sqrt{\sigma_{I}^{2}&plus;\epsilon}}) <br>
-$$![](https://latex.codecogs.com/gif.latex?\hat{a_{L}}=\frac{a-\mu_{L}}{\sqrt{\sigma_{L}^{2}&plus;\epsilon}}) <br>
-$$![](https://latex.codecogs.com/gif.latex?AdaLIN(a,\gamma,\beta)=\gamma\cdot&space;(\rho\cdot\hat{a}_{I}&plus;(1-\rho)\cdot\hat{a}_{L})&plus;\beta) <br>
-$$![](https://latex.codecogs.com/gif.latex?\rho\leftarrow&space;clip[0,1](\rho-\tau\Delta\rho)) <br>
+    ![](https://latex.codecogs.com/gif.latex?\hat{a_{I}}=\frac{a-\mu_{I}}{\sqrt{\sigma_{I}^{2}&plus;\epsilon}}) <br>
+    ![](https://latex.codecogs.com/gif.latex?\hat{a_{L}}=\frac{a-\mu_{L}}{\sqrt{\sigma_{L}^{2}&plus;\epsilon}}) <br>
+    ![](https://latex.codecogs.com/gif.latex?AdaLIN(a,\gamma,\beta)=\gamma\cdot&space;(\rho\cdot\hat{a}_{I}&plus;(1-\rho)\cdot\hat{a}_{L})&plus;\beta) <br>
+    ![](https://latex.codecogs.com/gif.latex?\rho\leftarrow&space;clip[0,1](\rho-\tau\Delta\rho)) <br>
 AdaIN能很好的将内容特征转移到样式特征上,但AdaIN假设特征通道之间不相关,意味着样式特征需要包括很多的内容模式,而LN则没有这个假设,但LN不能保持原始域的内容结构,因为LN考虑的是全局统计信息,所以作者将AdaIN和LN结合起来,结合两者的优势,有选择地保留或改变内容信息,有助于解决广泛的图像到图像的翻译问题.
 
 #### 归结下来有以下几个点:
@@ -37,8 +37,8 @@ AdaIN能很好的将内容特征转移到样式特征上,但AdaIN假设特征通
 
 ### 损失函数
 损失函数总共有四个,分别是Adversarial loss, Cycle loss, Identity loss和CAM loss.
-Adversarial loss: $$![](https://latex.codecogs.com/gif.latex?L_{gan}^{s\rightarrow&space;t}=(E_{x\sim&space;X_{t}}[(D_{t}(x))^{2}]&plus;E_{x\sim&space;X_{s}}[(1-D_{t}(G_{s\rightarrow&space;t}(x)))^{2}])) <br>
-Cycle loss: $$![](https://latex.codecogs.com/gif.latex?L_{cycle}^{s\rightarrow&space;t}=E_{x\sim&space;X_{s}}[\mid&space;x-G_{t\rightarrow&space;s}(G_{s\rightarrow&space;t}(x))\mid&space;_{1}]) <br>
-Identity loss: $$![](https://latex.codecogs.com/gif.latex?L_{identity}^{s\rightarrow&space;t}=E_{x\sim&space;X_{t}}[\mid&space;x-G_{s\rightarrow&space;t}(x)\mid&space;_{1}]) <br>
-CAM loss: $$![](https://latex.codecogs.com/gif.latex?L_{cam}^{s\rightarrow&space;t}=-(E_{x\sim&space;X_{s}}[log(\eta&space;_{s}(x))]&plus;E_{x\sim&space;X_{t}}[log(1-\eta&space;_{s}(x))]))<br>
-$$![](https://latex.codecogs.com/gif.latex?L_{cam}^{D_{t}}=E_{x\sim&space;X_{t}}[(\eta&space;_{D_{t}}(x))^2]&plus;E_{x\sim&space;X_{s}}[(1-\eta&space;_{D_{t}}(G_{s\rightarrow&space;t}(x))^2]) <br>
+Adversarial loss: ![](https://latex.codecogs.com/gif.latex?L_{gan}^{s\rightarrow&space;t}=(E_{x\sim&space;X_{t}}[(D_{t}(x))^{2}]&plus;E_{x\sim&space;X_{s}}[(1-D_{t}(G_{s\rightarrow&space;t}(x)))^{2}])) <br>
+Cycle loss: ![](https://latex.codecogs.com/gif.latex?L_{cycle}^{s\rightarrow&space;t}=E_{x\sim&space;X_{s}}[\mid&space;x-G_{t\rightarrow&space;s}(G_{s\rightarrow&space;t}(x))\mid&space;_{1}]) <br>
+Identity loss: ![](https://latex.codecogs.com/gif.latex?L_{identity}^{s\rightarrow&space;t}=E_{x\sim&space;X_{t}}[\mid&space;x-G_{s\rightarrow&space;t}(x)\mid&space;_{1}]) <br>
+CAM loss: ![](https://latex.codecogs.com/gif.latex?L_{cam}^{s\rightarrow&space;t}=-(E_{x\sim&space;X_{s}}[log(\eta&space;_{s}(x))]&plus;E_{x\sim&space;X_{t}}[log(1-\eta&space;_{s}(x))]))<br>
+![](https://latex.codecogs.com/gif.latex?L_{cam}^{D_{t}}=E_{x\sim&space;X_{t}}[(\eta&space;_{D_{t}}(x))^2]&plus;E_{x\sim&space;X_{s}}[(1-\eta&space;_{D_{t}}(G_{s\rightarrow&space;t}(x))^2]) <br>
