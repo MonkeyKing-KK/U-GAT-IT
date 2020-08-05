@@ -34,3 +34,11 @@ AdaIN能很好的将内容特征转移到样式特征上,但AdaIN假设特征通
 ![](https://github.com/MonkeyKing-KK/U-GAT-IT/blob/master/Images/Discriminator.png)
 具体结构与生成器类似,判别器的设计采用一个全局判别器(Global Discriminator)以及一个局部判别器(Local Discriminator)结合实现,所谓的全局判别器和局部判别器的区别就在于全局判别器对输入的图像进行了更深层次的特征压缩.<br>
 在判别器中也加入了 CAM 模块,虽然在判别器下 CAM 并没有做域的分类,但是加入注意力模块对于判别图像真伪是有益的,文中给出的解释是注意力图通过关注目标域中的真实图像和伪图像之间的差异来帮助进行微调.
+
+### 损失函数
+损失函数总共有四个,分别是Adversarial loss, Cycle loss, Identity loss和CAM loss.
+Adversarial loss: ![](https://latex.codecogs.com/gif.latex?L_{gan}^{s\rightarrow&space;t}=(E_{x\sim&space;X_{t}}[(D_{t}(x))^{2}]&plus;E_{x\sim&space;X_{s}}[(1-D_{t}(G_{s\rightarrow&space;t}(x)))^{2}])) <br>
+Cycle loss: ![](https://latex.codecogs.com/gif.latex?L_{cycle}^{s\rightarrow&space;t}=E_{x\sim&space;X_{s}}[\mid&space;x-G_{t\rightarrow&space;s}(G_{s\rightarrow&space;t}(x))\mid&space;_{1}]) <br>
+Identity loss: ![](https://latex.codecogs.com/gif.latex?L_{identity}^{s\rightarrow&space;t}=E_{x\sim&space;X_{t}}[\mid&space;x-G_{s\rightarrow&space;t}(x)\mid&space;_{1}]) <br>
+CAM loss: ![](https://latex.codecogs.com/gif.latex?L_{cam}^{s\rightarrow&space;t}=-(E_{x\sim&space;X_{s}}[log(\eta&space;_{s}(x))]&plus;E_{x\sim&space;X_{t}}[log(1-\eta&space;_{s}(x))]))<br>
+![](https://latex.codecogs.com/gif.latex?L_{cam}^{D_{t}}=E_{x\sim&space;X_{t}}[(\eta&space;_{D_{t}}(x))^2]&plus;E_{x\sim&space;X_{s}}[(1-\eta&space;_{D_{t}}(G_{s\rightarrow&space;t}(x))^2])<br>
