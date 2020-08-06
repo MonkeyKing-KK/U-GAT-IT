@@ -14,6 +14,7 @@
 整个模型框架中包含两个生成器和两个判别器,在生成器和判别器部分均加入了attention模块.模型基于辅助分类器获得注意力图,通过区分源域和目标域,指导转换专注于更重要的区域,而忽略次要区域.这些注意力图在生成器和判别器中都有嵌入来专注于重要的语义区域,促进形状变换.生成器中的注意力图引起对专门区分这两个域的区域的关注,而鉴别器中的注意力图则通过关注目标域中真实图像和伪图像之间的差异来帮助进行微调.因此,无需修改模型架构或超参数，就可以完成变化较大的image translation任务.下面具体介绍生成器和判别器.
 ### 生成器
 ![](https://github.com/MonkeyKing-KK/U-GAT-IT/blob/master/Images/Generator.png)
+
 首先图像经过一个下采样模块,然后经过一个残差块,得到编码后的特征图，编码后的特征图分两路,一路是通过一个辅助分类器,得到有每个特征图的权重信息,然后与另外一路编码后的特征图相乘,得到有注意力的特征图.注意力特征图依然是分两路,一路经过一个1x1卷积和激活函数层得到黄色的a1...an特征图,然后黄色特征图通过全连接层得到解码器中 Adaptive Layer-Instance Normalization层的gamma和beta,另外一路作为解码器的输入,经过一个自适应的残差块（含有Adaptive Layer-Instance Normalization）以及上采样模块得到生成结果.<br>
 这里讲一下AdaLIN的具体公式:<br>
 ![](https://latex.codecogs.com/gif.latex?\hat{a_{I}}=\frac{a-\mu_{I}}{\sqrt{\sigma_{I}^{2}&plus;\epsilon}}) <br>
